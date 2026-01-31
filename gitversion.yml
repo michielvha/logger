@@ -1,7 +1,7 @@
 # https://gitversion.net/docs/reference/configuration
 workflow: GitHubFlow/v1
 next-version: 0.0.0
-tag-prefix: ''
+tag-prefix: 'v'
 semantic-version-format: Loose
 
 major-version-bump-message: '(BREAKING CHANGE|^.+!:)'
