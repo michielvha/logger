@@ -26,3 +26,4 @@ jobs:
         uses: michielvha/gitversion-tag-action@main
         with:
           configFilePath: 'gitversion.yml'
+          prefix: 'v'
