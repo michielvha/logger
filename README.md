@@ -43,6 +43,18 @@ func main() {
 }
 ```
 
+## Output
+
+Records go to standard output by default, which suits services whose logs a
+container runtime or journal collects. A command-line tool whose standard
+output carries data sends them to standard error instead:
+
+```go
+logger.InitWithOptions(logger.Options{Output: os.Stderr})
+```
+
+`Options.Level` works like the argument to `Init`; empty reads `LOG_LEVEL`.
+
 ## Log Levels
 
 Set via `logger.Init()` or `LOG_LEVEL` environment variable:
