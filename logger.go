@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	"strings"
@@ -20,10 +21,25 @@ const (
 	LevelError Level = "error"
 )
 
+// Options configures the default logger.
+type Options struct {
+	// Level is the minimum level. Empty reads LOG_LEVEL and falls back to info.
+	Level string
+	// Output receives the JSON records. Nil means os.Stdout.
+	// Command-line tools pass os.Stderr so standard output stays free for data.
+	Output io.Writer
+}
+
 // Init initializes the default logger with the specified log level
 // If level is empty, it reads from LOG_LEVEL environment variable
 // Defaults to INFO if not set
 func Init(level string) {
+	InitWithOptions(Options{Level: level})
+}
+
+// InitWithOptions initializes the default logger with the given options.
+func InitWithOptions(o Options) {
+	level := o.Level
 	if level == "" {
 		level = os.Getenv("LOG_LEVEL")
 	}
@@ -47,12 +63,17 @@ func Init(level string) {
 		slogLevel = slog.LevelInfo
 	}
 
+	output := o.Output
+	if output == nil {
+		output = os.Stdout
+	}
+
 	opts := &slog.HandlerOptions{
 		Level: slogLevel,
 	}
 
 	// Use JSON handler for structured logging
-	handler := slog.NewJSONHandler(os.Stdout, opts)
+	handler := slog.NewJSONHandler(output, opts)
 	defaultLogger = slog.New(handler)
 }
 
